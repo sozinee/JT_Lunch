@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OwnerManagement">
+<select id = "selectOwner" resultType="egovframework.jtLunch.admin.dashboard.DTO.OwnerManagementDTO">
+	SELECT
+		o.owner_id,
+		o.owner_name,
+		o.owner_tel,
+		r.name
+	FROM
+		owner o
+	JOIN
+		restaurant r
+	ON
+		o.restaurant_id = r.restaurant_id;
+</select>
+
+<select id = "checkID" resultType="egovframework.jtLunch.admin.dashboard.DTO.OwnerManagementDTO">
+	SELECT
+		owner_id
+	FROM
+		owner
+	WHERE
+		owner_id = #{id}
+</select>
+
+<insert id = "ownerJoin">
+	INSERT INTO
+		owner(
+			owner_id,
+			owner_pw,
+			owner_name,
+			owner_tel,
+			owner_auth,
+			restaurant_id
+		)
+	VALUES(
+		#{owner_id},
+		#{owner_pw},
+		#{owner_name},
+		#{owner_tel},
+		'ROLE_OWNER',
+		#{restaurant_id}
+	)	
+</insert>
+
+<select id = "selectRestaurant" resultType = "egovframework.jtLunch.admin.dashboard.DTO.RestaurantDTO">
+	SELECT 
+		restaurant_id, name
+	FROM
+		restaurant
+	WHERE
+		1=1
+		AND restaurant_id not in (select restaurant_id from owner)
+</select>
+</mapper>
